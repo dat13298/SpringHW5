@@ -1,5 +1,6 @@
-package com.aptech.springfhw5.common.entity;
+package com.aptech.springfhw5.common.entity.doctor;
 
+import com.aptech.springfhw5.common.entity.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

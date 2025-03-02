@@ -1,10 +1,10 @@
-package com.aptech.springfhw5.common.entity;
+package com.aptech.springfhw5.common.entity.appointment;
 
 import com.aptech.springfhw5.common.constant.EStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.aptech.springfhw5.common.entity.AbstractEntity;
+import com.aptech.springfhw5.common.entity.doctor.Doctor;
+import com.aptech.springfhw5.common.entity.patient.Patient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -21,13 +21,16 @@ public class Appointment extends AbstractEntity<Long, Appointment> {
 
     @NotNull(message = "Appointment date not null")
     private Date appointmentDate;
+
+    @Enumerated(EnumType.STRING)
     private EStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
     @NotNull(message = "Patient not null")
     private Patient patient;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     @NotNull(message = "Doctor not null")
     private Doctor doctor;
