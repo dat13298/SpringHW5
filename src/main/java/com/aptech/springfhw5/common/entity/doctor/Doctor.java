@@ -18,12 +18,12 @@ import lombok.*;
 @Builder
 public class Doctor extends AbstractEntity<Long, Doctor> {
 
-    @NotNull(message = "Firstname not null")
-    @Size(min = 1, message = "Firstname must be greater than 1")
+    @NotNull(message = "Name not null")
+    @Size(min = 1, message = "Name must be greater than 1")
     private String name;
 
-    @NotNull(message = "Firstname not null")
-    @Size(min = 1, message = "Firstname must be greater than 1")
+    @NotNull(message = "Specialization not null")
+    @Size(min = 1, message = "Specialization must be greater than 1")
     private String specialization;
 
     @Email(message = "Invalid Email")

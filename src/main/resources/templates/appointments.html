@@ -8,6 +8,7 @@
 <body>
 <div class="container">
     <h1 class="text-center">Hospital Appointments Management</h1>
+    <a th:href="@{/appointments/add}" class="btn btn-success">Create</a>
     <form th:action="@{/appointments}" method="get">
         <div class="row">
             <div class="col-4">
@@ -45,15 +46,43 @@
             <tbody>
             <tr th:each="apm : ${appointments}">
                 <th th:text="${apm.getId()}"></th>
-                <td th:text="${apm.getAppointmentDate()}">Mark</td>
-                <td th:text="${apm.getPatient().getFirstName() + ' ' + apm.getPatient().getLastName()}"></td>
-                <td th:text="${apm.getDoctor().getName()}"></td>
-                <td th:text="${apm.getDoctor().getSpecialization()}"></td>
+                <td th:text="${apm.getAppointmentDate()}"></td>
+                <td th:text="${apm.getPatientDTO().getFullName()}"></td>
+                <td th:text="${apm.getDoctorDTO().getName()}"></td>
+                <td th:text="${apm.getSpecialization()}"></td>
                 <td th:text="${apm.getStatus()}"></td>
-                <td><a class="btn btn-danger" th:href="@{/appointments/delete/{id}(id=${apm.getId()})}">Delete</a></td>
+                <td>
+                    <a class="btn btn-danger" th:href="@{/appointments/delete/{id}(id=${apm.getId()})}">Delete</a>
+                </td>
             </tr>
             </tbody>
         </table>
+    </div>
+    <div class="align-content-center">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li th:if="${!appointments.isFirst()}" class="page-item">
+                    <a class="page-link"
+                       th:href="@{/appointments(page=${appointments.number - 1}, size=${appointments.size}, keyword=${keyword}, status=${status})}"
+                        >Previous
+                    </a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, appointments.totalPages)}"
+                    th:classappend="${i == appointments.number + 1} ? 'active' : ''"
+                    class="page-item">
+                    <a class="page-link"
+                       th:href="@{/appointments(page=${i - 1}, size=${appointments.size}, keyword=${keyword}, status=${status})}"
+                       th:text="${i}">
+                    </a>
+                </li>
+                <li th:if="${!appointments.isLast()}" class="page-item">
+                    <a class="page-link"
+                       th:href="@{/appointments(page=${appointments.number + 1}, size=${appointments.size}, keyword=${keyword}, status=${status})}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 </body>
