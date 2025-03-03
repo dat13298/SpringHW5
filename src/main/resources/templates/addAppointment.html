@@ -11,27 +11,47 @@
     <form th:action="@{/appointments/save}" th:object="${appointment}" method="post">
       <div class="form-group">
         <label for="patients">Patient</label>
-        <select id="patients" th:field="*{patientDTO.id}" class="form-select w-100">
+        <select id="patients" th:name="patientId" class="form-select w-100">
           <option value="">Select Patient</option>
           <option  th:each="patient : ${patients}"
                    th:value="${patient.getId()}"
                    th:text="${patient.getFullName()+'('+patient.getId()+')'}"
           ></option>
         </select>
+        <small id="patientHelp"
+               class="form-text text-danger"
+               th:if="${errorPatient != null}"
+               th:text="${errorPatient}">
+        </small>
       </div>
       <div class="form-group">
         <label for="doctor">Doctor</label>
-        <select id="doctor" th:field="*{doctorDTO.id}" class="form-select w-100">
+        <select id="doctor" th:name="doctorId" class="form-select w-100">
           <option value="">Select Doctor</option>
           <option  th:each="doctor : ${doctors}"
                    th:value="${doctor.getId()}"
                    th:text="${doctor.getName()+'('+doctor.getId()+')'}"
           ></option>
         </select>
+        <small id="doctorHelp"
+               class="form-text text-danger"
+               th:if="${errorDoctor != null}"
+               th:text="${errorDoctor}">
+        </small>
       </div>
       <div class="form-group">
         <label for="rentalDate">Rental Date</label>
         <input type="datetime-local" th:field="*{appointmentDate}" class="form-control" id="rentalDate"/>
+        <small id="dateHelp" class="form-text text-danger"
+               th:if="${#fields.hasErrors('appointmentDate')}"
+               th:each="err : ${#fields.errors('appointmentDate')}"
+               th:text="${err}">
+        </small>
+        <small id="createFailed" class="form-text text-danger"
+               th:if="${#fields.hasGlobalErrors()}"
+               th:each="err : ${#fields.globalErrors()}"
+               th:text="${err}">
+        </small>
       </div>
       <div class="form-group" style="margin-top: 10px">
         <button type="submit" class="btn btn-primary">Submit</button>

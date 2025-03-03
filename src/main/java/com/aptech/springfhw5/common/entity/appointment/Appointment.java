@@ -7,6 +7,7 @@ import com.aptech.springfhw5.common.entity.patient.Patient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -20,6 +21,7 @@ import java.util.Date;
 public class Appointment extends AbstractEntity<Long, Appointment> {
 
     @NotNull(message = "Appointment date not null")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date appointmentDate;
 
     @Enumerated(EnumType.STRING)

@@ -16,4 +16,8 @@ public class PatientService {
         List<Patient> patients = patientRepository.findAll();
         return patients.stream().map(PatientDTO::new).collect(Collectors.toList());
     }
+
+    public Patient findById(Long id) {
+        return patientRepository.findById(id).orElse(null);
+    }
 }

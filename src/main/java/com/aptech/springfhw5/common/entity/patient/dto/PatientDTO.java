@@ -22,4 +22,6 @@ public class PatientDTO {
         this.phone = patient.getPhone();
         this.dob = patient.getDob();
     }
+
+    public PatientDTO(){}
 }

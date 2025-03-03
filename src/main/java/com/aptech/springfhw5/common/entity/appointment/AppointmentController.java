@@ -8,17 +8,17 @@ import com.aptech.springfhw5.common.entity.doctor.dto.DoctorDTO;
 import com.aptech.springfhw5.common.entity.patient.Patient;
 import com.aptech.springfhw5.common.entity.patient.PatientService;
 import com.aptech.springfhw5.common.entity.patient.dto.PatientDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -54,11 +54,61 @@ public class AppointmentController {
 
     @GetMapping("/add")
     public String add(Model model) {
-        model.addAttribute("appointment", new AppointmentDTO());
+        AppointmentDTO appointment = new AppointmentDTO();
+        appointment.setPatientDTO(new PatientDTO());
+        appointment.setDoctorDTO(new DoctorDTO());
+
+        model.addAttribute("appointment", appointment);
+
         List<PatientDTO> patients = patientService.findAll();
         model.addAttribute("patients", patients);
         List<DoctorDTO> doctors = doctorService.findAll();
         model.addAttribute("doctors", doctors);
         return "addAppointment";
     }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute("appointment") AppointmentDTO appointment,
+                       @RequestParam(name = "patientId", required = false) Long patientId,
+                       @RequestParam(name = "doctorId", required = false) Long doctorId,
+                       Model model) {
+
+        if (!model.containsAttribute("patients")) {
+            model.addAttribute("patients", patientService.findAll());
+        }
+        if (!model.containsAttribute("doctors")) {
+            model.addAttribute("doctors", doctorService.findAll());
+        }
+
+        if (patientId == null) {
+            model.addAttribute("errorPatient", "Patient is required");
+            return "addAppointment";
+        }
+
+        if (doctorId == null) {
+            model.addAttribute("errorDoctor", "Doctor is required");
+            return "addAppointment";
+        }
+
+        if (appointment.getAppointmentDate() == null) {
+            model.addAttribute("errorDate", "Appointment date is required");
+            return "addAppointment";
+        }
+
+        appointment.setPatientDTO(new PatientDTO());
+        appointment.getPatientDTO().setId(patientId);
+
+        appointment.setDoctorDTO(new DoctorDTO());
+        appointment.getDoctorDTO().setId(doctorId);
+
+        EStatus status = EStatus.SCHEDULED;
+        if (appointmentService.save(appointment, status)) {
+            return "redirect:/appointments";
+        } else {
+            model.addAttribute("createFailed", "Create failed");
+            return "addAppointment";
+        }
+    }
+
+
 }

@@ -20,4 +20,7 @@ public class DoctorDTO {
         this.email = doctor.getEmail();
         this.phone = doctor.getPhone();
     }
+
+    public DoctorDTO() {
+    }
 }
