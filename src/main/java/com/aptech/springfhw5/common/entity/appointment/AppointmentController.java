@@ -54,11 +54,7 @@ public class AppointmentController {
 
     @GetMapping("/add")
     public String add(Model model) {
-        AppointmentDTO appointment = new AppointmentDTO();
-        appointment.setPatientDTO(new PatientDTO());
-        appointment.setDoctorDTO(new DoctorDTO());
-
-        model.addAttribute("appointment", appointment);
+        model.addAttribute("appointment", new AppointmentDTO());
 
         List<PatientDTO> patients = patientService.findAll();
         model.addAttribute("patients", patients);
@@ -100,6 +96,11 @@ public class AppointmentController {
 
         appointment.setDoctorDTO(new DoctorDTO());
         appointment.getDoctorDTO().setId(doctorId);
+
+        if(appointmentService.isDoctorHasAppointment(appointment.getDoctorDTO().getId(), appointment.getAppointmentDate())) {
+            model.addAttribute("errorDoctor", "Doctor already appointment");
+            return "addAppointment";
+        }
 
         EStatus status = EStatus.SCHEDULED;
         if (appointmentService.save(appointment, status)) {
